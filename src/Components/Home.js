@@ -1,16 +1,20 @@
 import { useState, React, useEffect } from "react";
 import Nav from "./Nav.js";
 import ReactLoading from "react-loading";
+import Moment from 'react-moment';
 
 function Home() {
   const [query, setquery] = useState("New%20York");
   const [error, seterror] = useState(false);
-
+  const regionNames = new Intl.DisplayNames(
+    ['en'], {type: 'region'}
+  );
   
 
   const api = {
-    base: "api.weatherstack.com/",
-    key: "29b0c36533e2d882c2f336231dff94d3",
+    
+    base: "https://api.openweathermap.org/",
+    key: "fe4feefa8543e06d4f3c66d92c61b69c",
   };
 
   const [displayData, setdisplayData] = useState({
@@ -34,7 +38,7 @@ function Home() {
     setisfetching(true);
     setisfetching2(false);
     const fetchweather = await fetch(
-      `http://${api.base}current?access_key=${api.key}&query=${query}`,
+      `${api.base}data/2.5/weather?q=${query}&appid=${api.key}`,
       { force: true, mode: "cors" }
     )
       .then((res) => res.json())
@@ -52,15 +56,14 @@ function Home() {
       alert("Try Again");
     } else {
       setdisplayData({
-        wimg: fetchweather.current.weather_icons,
-        name: fetchweather.location.name,
-        region: fetchweather.location.region,
-        country: fetchweather.location.country,
-        temperature: fetchweather.current.temperature,
-        wind_speed: fetchweather.current.wind_speed,
-        humidity: fetchweather.current.humidity,
-        localtime: fetchweather.location.localtime,
-        weather_descriptions: fetchweather.current.weather_descriptions,
+        name: fetchweather.name,
+        wimg: fetchweather.weather[0].icon,
+        country: fetchweather.sys.country,
+        temperature: fetchweather.main.temp,
+        wind_speed: fetchweather.wind.speed,
+        humidity: fetchweather.main.humidity,
+        localtime: fetchweather.dt,
+        weather_descriptions: fetchweather.weather[0].description,
       });
     }
     setquery("");
@@ -68,11 +71,11 @@ function Home() {
  
   if(query==="New%20York"){
  
-    console.log("object")
+    
      const submit = async () => {
   
     const fetchweather = await fetch(
-      `http://${api.base}current?access_key=${api.key}&query=${query}`,
+      `${api.base}data/2.5/weather?q=${query}&appid=${api.key}`,
       { force: true, mode: "cors" }
     )
       .then((res) => res.json())
@@ -89,16 +92,17 @@ function Home() {
         alert("Try Again");
       } else {
         setdisplayData({
-          wimg: fetchweather.current.weather_icons,
-          name: fetchweather.location.name,
-          region: fetchweather.location.region,
-          country: fetchweather.location.country,
-          temperature: fetchweather.current.temperature,
-          wind_speed: fetchweather.current.wind_speed,
-          humidity: fetchweather.current.humidity,
-          localtime: fetchweather.location.localtime,
-          weather_descriptions: fetchweather.current.weather_descriptions,
+          
+          name: fetchweather.name,
+          wimg: fetchweather.weather[0].icon,
+          country: fetchweather.sys.country,
+          temperature: fetchweather.main.temp,
+          wind_speed: fetchweather.wind.speed,
+          humidity: fetchweather.main.humidity,
+          localtime: fetchweather.dt,
+          weather_descriptions: fetchweather.weather[0].description,
         });
+
       }
   
     setquery("");
@@ -132,7 +136,7 @@ function Home() {
 
       {isfetching && 
         <div className="absolute flex justify-center text-center text-5xl h-screen w-screen content-center items-center">
-          <ReactLoading type={"spin"} color={"blue"} height={300} width={300} />
+          <ReactLoading type={"spin"} color={"blue"} height={200} width={200} />
         </div>
       }
       {isfetching2 && 
@@ -156,8 +160,8 @@ function Home() {
         <div className="text-2xl justify-center h-screen  items-center ">
           <div className="flex justify-center">
             <img
-              src={displayData.wimg}
-              className=" absolute -z-10 opacity-10 w-screen h-screen "
+              src={`http://openweathermap.org/img/w/${displayData.wimg}.png`}
+              className=" absolute -z-10 opacity-20 w-screen h-screen  "
             ></img>
           </div>
           
@@ -166,13 +170,13 @@ function Home() {
             <div className="flex justify-center text-center m-2 p-2">
               {" "}
               {displayData.name}{" "}
-              {displayData.country}{" "}
+              {regionNames.of( displayData.country)}{" "}
             </div>
             <div className="flex justify-center content-center text-center m-2 p-2">
-              <span className="text-8xl font-normal">{displayData.temperature}</span> °C
+              <span className="text-8xl font-normal">{(displayData.temperature -273.15).toFixed(2)}</span> °C
             </div>
             <div className="flex justify-center content-center m-2 p-2">
-             {displayData.localtime}
+            <Moment unix>{displayData.localtime}</Moment>
             </div>
             <div className="flex-col text-center m-2 p-2">
                 <div className="m-2">{displayData.weather_descriptions}</div>
@@ -181,11 +185,11 @@ function Home() {
 
               <div className="flex-col text-center m-2 p-2">
                 <div className="m-2">Wind Speed</div>
-                <div className="m-2">{displayData.wind_speed}</div>
+                <div className="m-2">{displayData.wind_speed} m/s</div>
               </div>
               <div className="flex-col text-center m-2 p-2">
                 <div className="m-2">Humidity</div>
-                <div className="m-2">{displayData.humidity}</div>
+                <div className="m-2">{displayData.humidity} %</div>
               </div>
             </div>
           </div>
