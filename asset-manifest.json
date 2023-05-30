@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/weatherjaankaar/static/css/main.d0d8eaec.css",
-    "main.js": "/weatherjaankaar/static/js/main.6c264f80.js",
+    "main.js": "/weatherjaankaar/static/js/main.615a0545.js",
     "static/js/787.d62d1c65.chunk.js": "/weatherjaankaar/static/js/787.d62d1c65.chunk.js",
     "index.html": "/weatherjaankaar/index.html",
     "main.d0d8eaec.css.map": "/weatherjaankaar/static/css/main.d0d8eaec.css.map",
-    "main.6c264f80.js.map": "/weatherjaankaar/static/js/main.6c264f80.js.map",
+    "main.615a0545.js.map": "/weatherjaankaar/static/js/main.615a0545.js.map",
     "787.d62d1c65.chunk.js.map": "/weatherjaankaar/static/js/787.d62d1c65.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d0d8eaec.css",
-    "static/js/main.6c264f80.js"
+    "static/js/main.615a0545.js"
   ]
 }
